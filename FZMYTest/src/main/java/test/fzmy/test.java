@@ -5,7 +5,9 @@ import test.fzmy.bean.StudentBean;
 
 public class test {
 	public static void main(String[] args) {
-		ClassPathXmlApplicationContext applicationContext=new ClassPathXmlApplicationContext("applicationContext.xml");
+		//MyClassPathXmlApplication myClassPathXmlApplication = new MyClassPathXmlApplication("applicationContext.xml");
+
+		ClassPathXmlApplicationContext applicationContext=new ClassPathXmlApplicationContext("spring-${username}.xml");
 		StudentBean student = applicationContext.getBean(StudentBean.class);
 		System.out.println(student.toString());
 	}
