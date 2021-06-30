@@ -1,5 +1,6 @@
 package test.fzmy;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import test.fzmy.bean.StudentBean;
 
@@ -9,6 +10,8 @@ public class test {
 
 		ClassPathXmlApplicationContext applicationContext=new ClassPathXmlApplicationContext("spring-${username}.xml");
 		StudentBean student = applicationContext.getBean(StudentBean.class);
+		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext();
+		annotationConfigApplicationContext.getBean("aaa");
 		System.out.println(student.toString());
 	}
 }
