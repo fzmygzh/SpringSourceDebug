@@ -62,29 +62,34 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	/**
 	 * Constant for the default scope name: {@code ""}, equivalent to singleton
 	 * status unless overridden from a parent bean definition (if applicable).
+	 * 默认范围名称的常量：{@code ""}，除非从父 bean 定义（如果适用）覆盖，否则等效于单例状态。
 	 */
 	public static final String SCOPE_DEFAULT = "";
 
 	/**
 	 * Constant that indicates no external autowiring at all.
+	 * 表示根本没有外部自动装配的常量。
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_NO = AutowireCapableBeanFactory.AUTOWIRE_NO;
 
 	/**
 	 * Constant that indicates autowiring bean properties by name.
+	 * 按名称指示自动装配 bean 属性的常量。
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_BY_NAME = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
 
 	/**
 	 * Constant that indicates autowiring bean properties by type.
+	 * 按类型指示自动装配 bean 属性的常量。
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_BY_TYPE = AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE;
 
 	/**
 	 * Constant that indicates autowiring a constructor.
+	 * 指示自动装配构造函数的常量。
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_CONSTRUCTOR = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
@@ -92,27 +97,32 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	/**
 	 * Constant that indicates determining an appropriate autowire strategy
 	 * through introspection of the bean class.
+	 * 指示通过自省 bean 类确定适当的自动装配策略的常量。
 	 * @see #setAutowireMode
 	 * @deprecated as of Spring 3.0: If you are using mixed autowiring strategies,
 	 * use annotation-based autowiring for clearer demarcation of autowiring needs.
+	 * 从 Spring 3.0 开始：如果您使用混合自动装配策略，请使用基于注释的自动装配来更清晰地划分自动装配需求。
 	 */
 	@Deprecated
 	public static final int AUTOWIRE_AUTODETECT = AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT;
 
 	/**
 	 * Constant that indicates no dependency check at all.
+	 * 表示根本没有依赖性检查的常量。
 	 * @see #setDependencyCheck
 	 */
 	public static final int DEPENDENCY_CHECK_NONE = 0;
 
 	/**
 	 * Constant that indicates dependency checking for object references.
+	 * 指示对象引用的依赖性检查的常量。
 	 * @see #setDependencyCheck
 	 */
 	public static final int DEPENDENCY_CHECK_OBJECTS = 1;
 
 	/**
 	 * Constant that indicates dependency checking for "simple" properties.
+	 * 指示对“简单”属性进行依赖性检查的常量。
 	 * @see #setDependencyCheck
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
 	 */
@@ -120,6 +130,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * Constant that indicates dependency checking for all properties
+	 * 指示所有属性的依赖项检查的常量
 	 * (object references as well as "simple" properties).
 	 * @see #setDependencyCheck
 	 */
@@ -134,29 +145,58 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * name.
 	 * <p>Currently, the method names detected during destroy method inference
 	 * are "close" and "shutdown", if present on the specific bean class.
+	 * 指示容器应尝试为 bean 推断 {@link setDestroyMethodName destroy method name} 的常量，
+	 * 而不是显式指定方法名称。值 {@value} 专门设计用于在方法名称中包含非法字符，确保不会与具有相同名称的合法命名方法发生冲突。
+	 * <p>目前，在销毁方法推断期间检测到的方法名称是“关闭”和“关闭”，如果存在于特定 bean 类中。
 	 */
 	public static final String INFER_METHOD = "(inferred)";
 
-
+	/**
+	 * 用于保存bean组件的class对象
+	 */
 	@Nullable
 	private volatile Object beanClass;
 
+	/**
+	 * bean的作用范围，默认是单例即singleton
+	 */
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
 
+	/**
+	 * 判断当前bean是不是抽象的
+	 */
 	private boolean abstractFlag = false;
 
+	/**
+	 * 是不是懒加载
+	 */
 	@Nullable
 	private Boolean lazyInit;
+	/**
+	 * 默认的注入模型是0，不支持外部注入
+	 */
 
 	private int autowireMode = AUTOWIRE_NO;
 
+	/**
+	 * 默认的依赖检查方式
+	 */
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
+	/**
+	 * 当前bean的创建，必须要依赖什么bean先被创建
+	 */
 	@Nullable
 	private String[] dependsOn;
+	/**
+	 * 设置为false时，这样的容器在自动装配时，会不考虑当前的bean,(他不会被看做其他bean的依赖bean,但是他依赖的其他bean是能够被自动装配进来的)
+	 */
 
 	private boolean autowireCandidate = true;
+	/**
+	 * 当发生自动装配的时候，加入发现某个bean有多个实例，name标注了primary=true会被首先注入
+	 */
 
 	private boolean primary = false;
 

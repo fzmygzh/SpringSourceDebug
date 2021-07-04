@@ -136,15 +136,20 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Add the given singleton object to the singleton cache of this factory.
+	 * 将给定的单例对象添加到该工厂的单例缓存中，并且考虑循环依赖和正常环境，将二三级缓存移除
 	 * <p>To be called for eager registration of singletons.
 	 * @param beanName the name of the bean
 	 * @param singletonObject the singleton object
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
 		synchronized (this.singletonObjects) {
+			//加入到单例缓存吃池中
 			this.singletonObjects.put(beanName, singletonObject);
+			//从三级缓存移除，针对的不是处理循环依赖
 			this.singletonFactories.remove(beanName);
+			//从二级缓存移除，因为循环依赖的时候，早期对象存在二级缓存中
 			this.earlySingletonObjects.remove(beanName);
+			//记录已经处理的bean
 			this.registeredSingletons.add(beanName);
 		}
 	}
@@ -185,15 +190,31 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-		//先从一级缓存取查找是否有缓存对象，
+		/**
+		 * 第一步：先从一级缓存获取bean，（这里获取的对象一般都是可以直接使用的）
+		 * IOC容器初始化加载单例bean的时候第一次进来，这个map一般返回是空
+		 */
 		Object singletonObject = this.singletonObjects.get(beanName);
+		/**
+		 * 若是在一级缓存获取不到需要的bean,并且SingletonCurrentlyInCreation这个list中包含该bean
+		 * ioc容器初始化加载单例bean的时候第一次进来，该list一般返回空，但是循环依赖时候	可以满足该条件
+		 */
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			//这里synchronized的作用是因为，二级，三级缓存是hashmap，会有并发问题
 			synchronized (this.singletonObjects) {
+				/**
+				 * 尝试去二级缓存中获取对象，这时候的对象是早期对象，也就是该bean刚调用了构造方法，但是没给该bean注入属性的时候
+				 */
 				singletonObject = this.earlySingletonObjects.get(beanName);
+				/**
+				 * 二级缓存也没有该对象时，allowEarlyReference参数是上一个方法传过来的true
+				 */
 				if (singletonObject == null && allowEarlyReference) {
+					/**
+					 * 直接从三级缓存获取ObjectFactory对象，这里是解决循环依赖的核心，
+					 * IOC在后期当有bean调用构造方法，会将早期对象包装成ObjectFactory，暴露在三级缓存中
+					 */
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
-					//如果从三级缓存获取到对象，会将三级缓存数据删除，并给二级缓存添加数据
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);
