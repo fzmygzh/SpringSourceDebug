@@ -485,6 +485,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Make sure bean class is actually resolved at this point, and
 		// clone the bean definition in case of a dynamically resolved Class
 		// which cannot be stored in the shared merged bean definition.
+		/**
+		 * 确保此时的bean是已经被解析的
+		 * 如果获取的class属性不为null,则克隆该beanDefinition
+		 * 主要是因为动态解析的class文件无法保存到共享的beanDefinition
+		 */
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
 			mbdToUse = new RootBeanDefinition(mbd);
@@ -493,6 +498,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Prepare method overrides.
 		try {
+			/**
+			 * 验证和准备覆盖的方法
+			 * lookup-method和replace-method这两个配置存放在beanDefinition的methodOverrides
+			 * 通常bean实例化中如果检测到methodOverrides，则会动态的为当前bean生产代理对象并用对象拦截器为bean做增强处理
+			 */
 			mbdToUse.prepareMethodOverrides();
 		}
 		catch (BeanDefinitionValidationException ex) {
@@ -502,6 +512,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			/**
+			 * 通过bean的后置处理器进行后置处理生产代理对象，一般来说这里不会生产代理对象，因为无论是cglib还是jdk代理都不会再此处生成
+			 * 此时还 未生产真正的对象，所以不会生产代理对象，而这一步则是我们aop和事物的关键，在这解析我们的AOP切面缓存
+			 */
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -513,6 +527,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			//这一步是我们生产bean的实例对象过程
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Finished creating instance of bean '" + beanName + "'");
@@ -1098,6 +1113,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/**
 	 * Apply before-instantiation post-processors, resolving whether there is a
 	 * before-instantiation shortcut for the specified bean.
+	 * 应用实例化前的后处理器，解决指定 bean 是否有实例化前的快捷方式。
 	 * @param beanName the name of the bean
 	 * @param mbd the bean definition for the bean
 	 * @return the shortcut-determined bean instance, or {@code null} if none
