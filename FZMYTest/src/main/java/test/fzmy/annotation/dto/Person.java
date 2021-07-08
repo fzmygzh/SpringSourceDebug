@@ -12,6 +12,6 @@ public class Person {
 		this.name=name;
 		this.age=age;
 		this.sex=sex;
-		System.out.println("Person实体类获取数据====姓名："+name+"**年龄："+age+"**性别："+sex);
+		//System.out.println("Person实体类获取数据====姓名："+name+"**年龄："+age+"**性别："+sex);
 	}
 }
