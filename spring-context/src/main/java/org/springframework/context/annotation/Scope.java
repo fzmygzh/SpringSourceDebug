@@ -75,7 +75,7 @@ public @interface Scope {
 	 * <p>Defaults to an empty string ({@code ""}) which implies
 	 * {@link ConfigurableBeanFactory#SCOPE_SINGLETON SCOPE_SINGLETON}.
 	 * @since 4.2
-	 * @see ConfigurableBeanFactory#SCOPE_PROTOTYPE 多实例，每次获取的bean都是新创建一个
+	 * @see ConfigurableBeanFactory#SCOPE_PROTOTYPE 多实例，每次获取的bean都是新创建一个,所以创建的时候不是IOC容器创建，而且每次调用的时候创建
 	 * @see ConfigurableBeanFactory#SCOPE_SINGLETON 单例，每次获取的都是同一个bean
 	 * @see org.springframework.web.context.WebApplicationContext#SCOPE_REQUEST   request实例
 	 * @see org.springframework.web.context.WebApplicationContext#SCOPE_SESSION   session实例
