@@ -75,10 +75,10 @@ public @interface Scope {
 	 * <p>Defaults to an empty string ({@code ""}) which implies
 	 * {@link ConfigurableBeanFactory#SCOPE_SINGLETON SCOPE_SINGLETON}.
 	 * @since 4.2
-	 * @see ConfigurableBeanFactory#SCOPE_PROTOTYPE
-	 * @see ConfigurableBeanFactory#SCOPE_SINGLETON
-	 * @see org.springframework.web.context.WebApplicationContext#SCOPE_REQUEST
-	 * @see org.springframework.web.context.WebApplicationContext#SCOPE_SESSION
+	 * @see ConfigurableBeanFactory#SCOPE_PROTOTYPE 多实例，每次获取的bean都是新创建一个
+	 * @see ConfigurableBeanFactory#SCOPE_SINGLETON 单例，每次获取的都是同一个bean
+	 * @see org.springframework.web.context.WebApplicationContext#SCOPE_REQUEST   request实例
+	 * @see org.springframework.web.context.WebApplicationContext#SCOPE_SESSION   session实例
 	 * @see #value
 	 */
 	@AliasFor("value")

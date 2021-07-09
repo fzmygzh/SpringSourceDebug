@@ -4,10 +4,7 @@ package test.fzmy.annotation.configration;
  * 通过注解实现bean注入
  */
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Controller;
 import test.fzmy.annotation.dto.Person;
 
@@ -28,7 +25,12 @@ public class MyConfigration {
 	 * @Bean是bean注入的一种方式，比较常见的,类型为返回值类型,也可以通过@Bean("updatePerson")改名，如果默认则是person
 	 * @return
 	 */
+	/**
+	 * @Scope是bean实例化方式，默认是单例
+	 * @return
+	 */
 	@Bean
+	@Scope("prototype")
 	public Person person1(){
 		return new Person("丁峰1",26,"男");
 	}
